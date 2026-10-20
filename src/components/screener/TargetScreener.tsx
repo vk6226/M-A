@@ -8,7 +8,7 @@ import { ArrowUpDown, AlertCircle, Sparkles } from 'lucide-react';
 type SortOption = 'fitScore' | 'arr' | 'growth' | 'ev' | 'multiple' | 'synergy';
 
 export const TargetScreener: React.FC = () => {
-  const { targets, filterState } = useDealflow();
+  const { targets, filterState, setIsAddTargetOpen, resetTargets } = useDealflow();
   const [sortBy, setSortBy] = useState<SortOption>('fitScore');
 
   // Filter logic
@@ -117,17 +117,38 @@ export const TargetScreener: React.FC = () => {
       {/* Interactive Filter Panel */}
       <FilterPanel />
 
-      {/* Results Header */}
+      {/* Results Header with Ingest Action */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '12px',
         marginBottom: '16px',
         fontSize: '0.825rem',
         color: 'var(--text-muted)',
       }}>
         <div>
           Showing <span style={{ color: '#ffffff', fontWeight: 700 }}>{sortedTargets.length}</span> of {targets.length} targets matching precision criteria
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button
+            onClick={() => setIsAddTargetOpen(true)}
+            className="btn btn-emerald btn-sm"
+            id="btn-screener-ingest-target"
+          >
+            <Sparkles size={13} />
+            <span>+ Ingest Target Company</span>
+          </button>
+
+          <button
+            onClick={resetTargets}
+            className="btn btn-secondary btn-sm"
+            title="Reset universe to benchmark target set"
+          >
+            <span>Reset Universe</span>
+          </button>
         </div>
       </div>
 

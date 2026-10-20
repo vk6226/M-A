@@ -25,6 +25,13 @@ interface DealflowContextType {
   removeFromCompare: (targetId: string) => void;
   clearCompare: () => void;
   
+  // Target Ingestion & Management
+  addTarget: (target: TargetCompany) => void;
+  importTargets: (imported: TargetCompany[]) => void;
+  resetTargets: () => void;
+  isAddTargetOpen: boolean;
+  setIsAddTargetOpen: (open: boolean) => void;
+
   // Pipeline management
   addToPipeline: (targetId: string, stage?: DealStage, priority?: PriorityLevel) => void;
   updateDealStage: (pipelineId: string, newStage: DealStage) => void;
@@ -62,7 +69,10 @@ const DEFAULT_FILTERS: ScreenerFilterState = {
 const DealflowContext = createContext<DealflowContextType | undefined>(undefined);
 
 export const DealflowProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [targets] = useState<TargetCompany[]>(MOCK_TARGETS);
+  const [targets, setTargets] = useState<TargetCompany[]>(() => {
+    const saved = localStorage.getItem('aura_mna_targets');
+    return saved ? JSON.parse(saved) : MOCK_TARGETS;
+  });
   const [pipeline, setPipeline] = useState<PipelineDeal[]>(() => {
     const saved = localStorage.getItem('aura_mna_pipeline');
     return saved ? JSON.parse(saved) : INITIAL_PIPELINE;
@@ -73,6 +83,11 @@ export const DealflowProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [compareTargetIds, setCompareTargetIds] = useState<string[]>(['tgt-01', 'tgt-02']);
   const [filterState, setFilterState] = useState<ScreenerFilterState>(DEFAULT_FILTERS);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [isAddTargetOpen, setIsAddTargetOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('aura_mna_targets', JSON.stringify(targets));
+  }, [targets]);
 
   useEffect(() => {
     localStorage.setItem('aura_mna_pipeline', JSON.stringify(pipeline));
@@ -193,6 +208,22 @@ export const DealflowProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setFilterState(DEFAULT_FILTERS);
   };
 
+  const addTarget = (newTarget: TargetCompany) => {
+    setTargets((prev) => [newTarget, ...prev]);
+    showToast('success', 'Target Ingested', `${newTarget.name} (${newTarget.codeName}) added to target universe.`);
+  };
+
+  const importTargets = (imported: TargetCompany[]) => {
+    setTargets((prev) => [...imported, ...prev]);
+    showToast('success', 'Bulk Import Complete', `Successfully imported ${imported.length} new company targets.`);
+  };
+
+  const resetTargets = () => {
+    setTargets(MOCK_TARGETS);
+    localStorage.removeItem('aura_mna_targets');
+    showToast('info', 'Universe Reset', 'Restored default benchmark targets.');
+  };
+
   return (
     <DealflowContext.Provider
       value={{
@@ -207,6 +238,11 @@ export const DealflowProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         addToCompare,
         removeFromCompare,
         clearCompare,
+        addTarget,
+        importTargets,
+        resetTargets,
+        isAddTargetOpen,
+        setIsAddTargetOpen,
         addToPipeline,
         updateDealStage,
         updateDealPriority,

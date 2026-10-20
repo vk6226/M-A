@@ -7,6 +7,7 @@ import { DealPipelineKanban } from './components/pipeline/DealPipelineKanban';
 import { HeadToHeadCompare } from './components/compare/HeadToHeadCompare';
 import { AwsDeploymentGuide } from './components/aws/AwsDeploymentGuide';
 import { TargetDossierModal } from './components/dossier/TargetDossierModal';
+import { AddTargetModal } from './components/screener/AddTargetModal';
 import { CheckCircle2, AlertTriangle, Info, X } from 'lucide-react';
 
 const MainAppContent: React.FC = () => {
@@ -28,6 +29,9 @@ const MainAppContent: React.FC = () => {
 
       {/* Target Deep Dive Modal */}
       <TargetDossierModal />
+
+      {/* Target Ingestion Modal */}
+      <AddTargetModal />
 
       {/* Toast Notification Container */}
       <div className="toast-container">

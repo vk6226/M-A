@@ -9,8 +9,7 @@ import {
   Cloud, 
   Download, 
   Building2, 
-  CheckCircle2, 
-  Sparkles 
+  PlusCircle
 } from 'lucide-react';
 import { exportTargetsCsv } from '../../utils/exportUtils';
 
@@ -22,7 +21,8 @@ export const Header: React.FC = () => {
     compareTargets, 
     targets, 
     acquirer,
-    showToast 
+    showToast,
+    setIsAddTargetOpen
   } = useDealflow();
 
   const handleExportCsv = () => {
@@ -208,6 +208,16 @@ export const Header: React.FC = () => {
 
         {/* Action Buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button
+            onClick={() => setIsAddTargetOpen(true)}
+            id="btn-header-add-target"
+            className="btn btn-emerald btn-sm"
+            title="Ingest or generate new target company"
+          >
+            <PlusCircle size={14} />
+            <span>+ Add Company</span>
+          </button>
+
           <button
             onClick={handleExportCsv}
             id="btn-export-csv"
