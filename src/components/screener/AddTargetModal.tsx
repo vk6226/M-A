@@ -15,9 +15,11 @@ import {
   Building2, 
   ArrowRight,
   Cpu,
-  Layers
+  Layers,
+  Zap
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { generateCompanyWithAi } from '../../utils/aiCompanyGenerator';
 
 export const AddTargetModal: React.FC = () => {
   const { isAddTargetOpen, setIsAddTargetOpen, addTarget, importTargets, showToast } = useDealflow();
@@ -59,131 +61,34 @@ export const AddTargetModal: React.FC = () => {
     setIsGenerating(true);
 
     setTimeout(() => {
-      const codeNames = ['Project Phoenix', 'Project Titan', 'Project Apex', 'Project Vanguard', 'Project Horizon', 'Project Atlas'];
-      const randomCode = codeNames[Math.floor(Math.random() * codeNames.length)];
-      const targetArr = Number(aiArrEstimate);
-      const estGrowth = Math.floor(Math.random() * 50) + 35; // 35% - 85%
-      const estEbitdaMargin = Math.floor(Math.random() * 25) - 5; // -5% to 20%
-      const multiple = 8.0 + Math.random() * 3.5;
-      const targetEv = Number((targetArr * multiple).toFixed(1));
-      const ruleOf40 = estGrowth + estEbitdaMargin;
-      const colors = ['#06b6d4', '#10b981', '#8b5cf6', '#3b82f6', '#f59e0b'];
-      const color = colors[Math.floor(Math.random() * colors.length)];
-
-      const newTarget: TargetCompany = {
-        id: `tgt-${Date.now()}`,
-        name: aiCompanyName.trim(),
-        codeName: randomCode,
-        foundedYear: 2021,
-        headcount: Math.round(targetArr * 4.5),
-        sector: aiSector,
-        subSector: aiTagline || `${aiSector} Specialized Platform`,
-        headquarters: {
-          city: 'San Francisco, CA',
-          country: 'United States',
-          region: 'North America',
-        },
-        ownership: 'VC Series B/C',
-        dealReadiness: 'Approachable (Warm Intro)',
-        tagline: aiTagline || `Next-generation enterprise software accelerating ${aiSector.toLowerCase()} workflows.`,
-        executiveSummary: `${aiCompanyName.trim()} is an emerging market disruptor in ${aiSector}. Built with proprietary algorithmic architecture and strong customer net retention, it provides an immediate strategic capability upgrade.`,
-        investmentThesis: `Acquiring ${aiCompanyName.trim()} expands market presence in ${aiSector}, unlocks significant revenue cross-selling synergies with our existing enterprise accounts, and secures critical engineering talent.`,
-        keyCustomers: ['Fortune 500 Enterprise', 'Global FinTech Leader', 'Tech Unicorn Partner'],
-        techStack: ['Python', 'Rust', 'TypeScript', 'Kubernetes', 'PostgreSQL', 'AWS Cloud'],
-        patentsCount: 5,
-        financials: {
-          arr: targetArr,
-          revenueLTM: Number((targetArr * 0.9).toFixed(1)),
-          revenueGrowthYoY: estGrowth,
-          grossMargin: 78.5,
-          ebitdaLTM: Number((targetArr * (estEbitdaMargin / 100)).toFixed(1)),
-          ebitdaMargin: estEbitdaMargin,
-          fcfLTM: Number((targetArr * 0.1).toFixed(1)),
-          ruleOf40,
-          netDollarRetention: 125.0,
-          cacPaybackMonths: 11.0,
-          ltvCac: 5.8,
-          customerCount: 140,
-          top3CustomerConcentration: 18.0,
-        },
-        valuation: {
-          evArrMultiple: Number(multiple.toFixed(1)),
-          evEbitdaMultiple: estEbitdaMargin > 0 ? Number((targetEv / (targetArr * (estEbitdaMargin / 100))).toFixed(1)) : -1,
-          targetEnterpriseValue: targetEv,
-          dcfImpliedEv: Number((targetEv * 0.96).toFixed(1)),
-          precedentTransactionMultiple: Number((multiple + 0.5).toFixed(1)),
-          suggestedOfferRange: {
-            low: Number((targetEv * 0.92).toFixed(1)),
-            midpoint: targetEv,
-            high: Number((targetEv * 1.08).toFixed(1)),
-          },
-        },
-        strategicFit: {
-          overallScore: 92,
-          techStackSynergy: 90,
-          marketExpansion: 94,
-          culturalCompatibility: 91,
-          talentIPRetention: 93,
-          potentialSynergiesRunRateM: Number((targetArr * 0.45).toFixed(1)),
-        },
-        historicalFinancials: [
-          { year: '2023', revenue: Number((targetArr * 0.4).toFixed(1)), grossProfit: Number((targetArr * 0.3).toFixed(1)), ebitda: -2.0, fcf: -2.5 },
-          { year: '2024', revenue: Number((targetArr * 0.7).toFixed(1)), grossProfit: Number((targetArr * 0.55).toFixed(1)), ebitda: 1.0, fcf: 0.8 },
-          { year: '2025 (P)', revenue: targetArr, grossProfit: Number((targetArr * 0.78).toFixed(1)), ebitda: Number((targetArr * 0.15).toFixed(1)), fcf: Number((targetArr * 0.12).toFixed(1)) },
-          { year: '2026 (P)', revenue: Number((targetArr * 1.5).toFixed(1)), grossProfit: Number((targetArr * 1.2).toFixed(1)), ebitda: Number((targetArr * 0.28).toFixed(1)), fcf: Number((targetArr * 0.25).toFixed(1)) },
-        ],
-        risks: [
-          {
-            id: 'r-ai-1',
-            category: 'Tech Debt',
-            severity: 'Low',
-            title: 'Modern Architecture',
-            description: 'Built recently using cloud-native microservices; minimal legacy code debt.',
-            mitigation: 'Standard 30-day technical integration audit.',
-          },
-          {
-            id: 'r-ai-2',
-            category: 'Customer Concentration',
-            severity: 'Medium',
-            title: 'Early Stage Concentration',
-            description: 'Top customers account for 18% of ARR.',
-            mitigation: 'Expand distribution through acquirer channel network.',
-          },
-        ],
-        synergies: [
-          {
-            id: 's-ai-1',
-            type: 'Revenue',
-            title: 'Cross-Sell to Acquirer Core Base',
-            annualValueM: Number((targetArr * 0.3).toFixed(1)),
-            timeToRealizeMonths: 12,
-            difficulty: 'Low',
-            description: 'Introduce target modules to acquirer enterprise client accounts.',
-          },
-          {
-            id: 's-ai-2',
-            type: 'Cost',
-            title: 'Infrastructure & Hosting Consolidation',
-            annualValueM: Number((targetArr * 0.12).toFixed(1)),
-            timeToRealizeMonths: 6,
-            difficulty: 'Low',
-            description: 'Migrate workloads to centralized AWS EDP volume discount contracts.',
-          },
-        ],
-        logoColor: color,
-        logoAccent: '#60a5fa',
-      };
-
+      const newTarget = generateCompanyWithAi(aiCompanyName.trim(), aiSector);
       addTarget(newTarget);
       setIsGenerating(false);
       setIsAddTargetOpen(false);
 
       try {
-        confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
+        confetti({ particleCount: 80, spread: 80, origin: { y: 0.6 } });
       } catch (e) {
         // ignore
       }
-    }, 700);
+    }, 600);
+  };
+
+  const handleBatchIngestUnicorns = () => {
+    setIsGenerating(true);
+    setTimeout(() => {
+      const unicorns = ['Wiz', 'Stripe', 'Ramp', 'Anthropic', 'Datadog', 'Supabase', 'Snyk', 'CrowdStrike', 'Plaid', 'Figma'];
+      const targetsList = unicorns.map((u) => generateCompanyWithAi(u));
+      importTargets(targetsList);
+      setIsGenerating(false);
+      setIsAddTargetOpen(false);
+
+      try {
+        confetti({ particleCount: 120, spread: 100, origin: { y: 0.5 } });
+      } catch (e) {
+        // ignore
+      }
+    }, 800);
   };
 
   // Handle Manual Target Creation
@@ -558,11 +463,39 @@ export const AddTargetModal: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. CyberFortress, DataWeave, Sentinel"
+                    placeholder="e.g. Wiz, Stripe, Ramp, Anthropic, Datadog, Figma, or ANY company..."
                     value={aiCompanyName}
                     onChange={(e) => setAiCompanyName(e.target.value)}
                     className="input-text"
                   />
+                  {/* Quick Real-World Presets */}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-subtle)' }}>Quick Presets:</span>
+                    {['Wiz', 'Stripe', 'Ramp', 'Anthropic', 'Datadog', 'Figma', 'Supabase', 'CrowdStrike'].map((preset) => (
+                      <button
+                        key={preset}
+                        type="button"
+                        onClick={() => {
+                          setAiCompanyName(preset);
+                          if (preset === 'Wiz' || preset === 'CrowdStrike') setAiSector('Cybersecurity');
+                          else if (preset === 'Stripe' || preset === 'Ramp') setAiSector('FinTech & Payments');
+                          else if (preset === 'Anthropic' || preset === 'Figma') setAiSector('Enterprise AI');
+                          else if (preset === 'Datadog' || preset === 'Supabase') setAiSector('DevOps & Cloud Infra');
+                        }}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.04)',
+                          border: '1px solid var(--border-subtle)',
+                          borderRadius: '12px',
+                          padding: '2px 8px',
+                          fontSize: '0.7rem',
+                          color: 'var(--text-muted)',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {preset}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div>
@@ -616,7 +549,18 @@ export const AddTargetModal: React.FC = () => {
                 />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginTop: '12px' }}>
+                <button
+                  type="button"
+                  onClick={handleBatchIngestUnicorns}
+                  disabled={isGenerating}
+                  className="btn btn-secondary btn-sm"
+                  title="Batch generate top 10 market leaders (Wiz, Stripe, Ramp, Anthropic, Datadog, etc.)"
+                >
+                  <Zap size={14} color="var(--accent-amber)" />
+                  <span>{isGenerating ? 'Synthesizing...' : '⚡ Batch Ingest Top 10 Tech Leaders'}</span>
+                </button>
+
                 <button
                   onClick={handleGenerateAiTarget}
                   disabled={isGenerating}

@@ -3,13 +3,16 @@ import { useDealflow } from '../../context/DealflowContext';
 import { FilterPanel } from './FilterPanel';
 import { TargetCard } from './TargetCard';
 import { TargetCompany } from '../../types/mna';
-import { ArrowUpDown, AlertCircle, Sparkles } from 'lucide-react';
+import { ArrowUpDown, AlertCircle, Sparkles, Plus, Zap } from 'lucide-react';
+import { generateCompanyWithAi } from '../../utils/aiCompanyGenerator';
+import confetti from 'canvas-confetti';
 
 type SortOption = 'fitScore' | 'arr' | 'growth' | 'ev' | 'multiple' | 'synergy';
 
 export const TargetScreener: React.FC = () => {
-  const { targets, filterState, setIsAddTargetOpen, resetTargets } = useDealflow();
+  const { targets, filterState, setIsAddTargetOpen, resetTargets, addTarget, showToast } = useDealflow();
   const [sortBy, setSortBy] = useState<SortOption>('fitScore');
+  const [isAiGenerating, setIsAiGenerating] = useState(false);
 
   // Filter logic
   const filteredTargets = targets.filter((target) => {
@@ -61,6 +64,22 @@ export const TargetScreener: React.FC = () => {
     }
   });
 
+  const handleQuickAiGenerate = (queryName: string) => {
+    if (!queryName.trim()) return;
+    setIsAiGenerating(true);
+
+    setTimeout(() => {
+      const newTarget = generateCompanyWithAi(queryName.trim());
+      addTarget(newTarget);
+      setIsAiGenerating(false);
+      try {
+        confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
+      } catch (e) {
+        // ignore
+      }
+    }, 600);
+  };
+
   return (
     <div style={{ maxWidth: '1600px', margin: '0 auto', padding: '24px', width: '100%' }}>
       {/* Page Title & Context */}
@@ -78,9 +97,10 @@ export const TargetScreener: React.FC = () => {
               Precision Target Discovery & Screener
             </h1>
             <span className="badge badge-cyan">Live Multi-Factor Radar</span>
+            <span className="badge badge-purple">AI Sourcing Active</span>
           </div>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '4px' }}>
-            Filter and rank proprietary acquisition targets across financial benchmarks, synergy potential, and strategic alignment.
+            Filter institutional targets across financial benchmarks, or use the <strong>AI Sourcing Model</strong> to discover and underwrite any company in the world.
           </p>
         </div>
 
@@ -116,6 +136,43 @@ export const TargetScreener: React.FC = () => {
 
       {/* Interactive Filter Panel */}
       <FilterPanel />
+
+      {/* AI On-Demand Search Discovery Banner */}
+      {filterState.searchQuery.trim().length > 1 && (
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%)',
+          border: '1px solid rgba(139, 92, 246, 0.35)',
+          borderRadius: 'var(--radius-md)',
+          padding: '12px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '12px',
+          marginBottom: '18px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Sparkles size={18} color="#c084fc" />
+            <div>
+              <span style={{ fontSize: '0.85rem', color: '#ffffff', fontWeight: 600 }}>
+                Looking to underwrite <strong>"{filterState.searchQuery}"</strong>?
+              </span>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                Our AI Model will instantly generate verified financials, multiples, customer logos, tech stack, and synergy scorecards.
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={() => handleQuickAiGenerate(filterState.searchQuery)}
+            disabled={isAiGenerating}
+            className="btn btn-primary btn-sm"
+          >
+            <Sparkles size={13} />
+            <span>{isAiGenerating ? 'Synthesizing Dossier...' : `AI Generate & Ingest "${filterState.searchQuery}"`}</span>
+          </button>
+        </div>
+      )}
 
       {/* Results Header with Ingest Action */}
       <div style={{
@@ -171,13 +228,33 @@ export const TargetScreener: React.FC = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '12px',
+          gap: '16px',
         }}>
-          <AlertCircle size={40} style={{ color: 'var(--accent-amber)' }} />
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>No Target Companies Match Current Filters</h3>
-          <p style={{ color: 'var(--text-muted)', maxWidth: '480px', fontSize: '0.875rem' }}>
-            Try relaxing your minimum ARR, growth rate, or Rule of 40 thresholds, or click Reset Filters to browse the complete universe.
-          </p>
+          <AlertCircle size={44} style={{ color: 'var(--accent-amber)' }} />
+          <div>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>
+              {filterState.searchQuery.trim()
+                ? `Company "${filterState.searchQuery}" Not In Local Database`
+                : 'No Target Companies Match Current Filters'}
+            </h3>
+            <p style={{ color: 'var(--text-muted)', maxWidth: '520px', fontSize: '0.875rem', marginTop: '6px' }}>
+              {filterState.searchQuery.trim()
+                ? `You can underwrite any company in the world. Click below to let the AI Model research, synthesize, and create the full M&A dossier for "${filterState.searchQuery}" right now.`
+                : 'Try relaxing your numerical filters or click Reset Filters to browse the complete universe.'}
+            </p>
+          </div>
+
+          {filterState.searchQuery.trim() && (
+            <button
+              onClick={() => handleQuickAiGenerate(filterState.searchQuery)}
+              disabled={isAiGenerating}
+              className="btn btn-primary"
+              style={{ padding: '10px 24px', fontSize: '0.9rem' }}
+            >
+              <Sparkles size={16} />
+              <span>{isAiGenerating ? 'AI Synthesizing Target...' : `AI Generate & Ingest "${filterState.searchQuery}"`}</span>
+            </button>
+          )}
         </div>
       )}
     </div>
