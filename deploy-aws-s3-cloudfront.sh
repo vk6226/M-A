@@ -5,6 +5,7 @@
 # ==============================================================================
 
 set -e
+export AWS_DEFAULT_OUTPUT=json
 
 echo "=========================================================="
 echo "  AURA M&A Platform - AWS Deployment Engine"

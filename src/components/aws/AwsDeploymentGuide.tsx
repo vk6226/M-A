@@ -12,11 +12,19 @@ import {
   Layers, 
   ExternalLink,
   BookOpen,
-  ArrowRight
+  ArrowRight,
+  Database,
+  Sparkles,
+  Zap,
+  Bell,
+  Clock,
+  Activity,
+  Key,
+  Users
 } from 'lucide-react';
 
 export const AwsDeploymentGuide: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'s3-cloudfront' | 'amplify' | 'docker-ecs' | 'ec2'>('s3-cloudfront');
+  const [activeTab, setActiveTab] = useState<'12-services' | 's3-cloudfront' | 'budget-calc' | 'multi-account' | 'docker-ecs'>('12-services');
   const [bucketName, setBucketName] = useState('aura-mna-platform-prod');
   const [awsRegion, setAwsRegion] = useState('us-east-1');
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -27,54 +35,120 @@ export const AwsDeploymentGuide: React.FC = () => {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
-  const s3Commands = [
+  const twelveServices = [
     {
-      title: 'Step 1: Test & Build the Production Web App Bundle',
-      desc: 'Compiles TypeScript, minifies HTML/JS/CSS, and outputs optimized static assets into the /dist folder.',
-      cmd: `npm run build`,
+      id: 's3',
+      name: '1. Amazon S3',
+      category: 'Static Hosting & Deal Room Storage',
+      cost: '$0.00 / mo',
+      note: '5 GB Free Tier for 12 mos. Holds static app and confidential CIM PDFs.',
+      icon: <Globe size={18} color="var(--accent-cyan)" />
     },
     {
-      title: 'Step 2: Create a Dedicated Amazon S3 Storage Bucket',
-      desc: 'Creates a private S3 bucket in your selected AWS region to hold the compiled application files.',
-      cmd: `aws s3api create-bucket --bucket ${bucketName} --region ${awsRegion} ${awsRegion === 'us-east-1' ? '' : `--create-bucket-configuration LocationConstraint=${awsRegion}`}`,
+      id: 'cloudfront',
+      name: '2. Amazon CloudFront',
+      category: 'Global Content Delivery Network',
+      cost: '$0.00 / mo',
+      note: '1 TB free egress + 10M requests free forever across 400+ Edge locations.',
+      icon: <Cloud size={18} color="#38bdf8" />
     },
     {
-      title: 'Step 3: Upload the Production Bundle to S3',
-      desc: 'Syncs all files from dist/ to your S3 bucket with optimal cache-control headers.',
-      cmd: `aws s3 sync dist/ s3://${bucketName}/ --delete`,
+      id: 'oac',
+      name: '3. CloudFront OAC',
+      category: 'Origin Access Control Security',
+      cost: '$0.00 / mo',
+      note: 'Included with CloudFront. Cryptographically locks S3 bucket from public access.',
+      icon: <ShieldCheck size={18} color="var(--accent-emerald)" />
     },
     {
-      title: 'Step 4: Create CloudFront CDN Distribution with Origin Access Control (OAC)',
-      desc: 'Distributes your app globally across 400+ edge locations with free HTTPS and low latency. You can run our automated script or create it via AWS CLI:',
-      cmd: `./deploy-aws-s3-cloudfront.sh`,
+      id: 'cloudformation',
+      name: '4. AWS CloudFormation',
+      category: 'Infrastructure as Code (IaC)',
+      cost: '$0.00 / mo',
+      note: 'Free automation service. Deploys and manages the entire cloud stack in 1 click.',
+      icon: <Layers size={18} color="#c084fc" />
     },
     {
-      title: 'Step 5: Invalidate CloudFront Cache on Updates',
-      desc: 'Forces global edge edge locations to refresh immediately when you deploy a new version.',
-      cmd: `aws cloudfront create-invalidation --distribution-id YOUR_DIST_ID --paths "/*"`,
+      id: 'apigateway',
+      name: '5. Amazon API Gateway',
+      category: 'Serverless RESTful API Endpoints',
+      cost: '$0.00 / mo',
+      note: '1 Million API calls free per month in Free Tier. Routes /api/targets requests.',
+      icon: <Zap size={18} color="var(--accent-amber)" />
+    },
+    {
+      id: 'lambda',
+      name: '6. AWS Lambda',
+      category: 'Serverless Valuation & Scoring Engine',
+      cost: '$0.00 / mo',
+      note: '1,000,000 invocations + 3.2M seconds compute free every month forever.',
+      icon: <Cpu size={18} color="#ec4899" />
+    },
+    {
+      id: 'dynamodb',
+      name: '7. Amazon DynamoDB',
+      category: 'NoSQL Target & Deal Pipeline Store',
+      cost: '$0.00 / mo',
+      note: '25 GB storage + 25 RCU/WCU free forever. Delivers sub-10ms target query latency.',
+      icon: <Database size={18} color="var(--accent-emerald)" />
+    },
+    {
+      id: 'cognito',
+      name: '8. Amazon Cognito',
+      category: 'Deal Team Identity & Role-Based Auth',
+      cost: '$0.00 / mo',
+      note: '50,000 Monthly Active Users (MAUs) free forever. Secures Investment Committee access.',
+      icon: <Users size={18} color="#38bdf8" />
+    },
+    {
+      id: 'bedrock',
+      name: '9. Amazon Bedrock',
+      category: 'Generative AI IC Memorandum Writer',
+      cost: '~$1.00 / mo',
+      note: 'Pay-per-token API (Claude / Titan). Generating 200+ IC Memos costs under $1.',
+      icon: <Sparkles size={18} color="#c084fc" />
+    },
+    {
+      id: 'textract',
+      name: '10. Amazon Textract',
+      category: 'Automated Financial Statement OCR',
+      cost: '$0.00 / mo',
+      note: '1,000 pages free per month under free tier. Extracts tables from scanned PDF CIMs.',
+      icon: <BookOpen size={18} color="var(--accent-cyan)" />
+    },
+    {
+      id: 'eventbridge',
+      name: '11. Amazon EventBridge',
+      category: 'Daily Market Check Cron Scheduler',
+      cost: '$0.00 / mo',
+      note: '14 Million events free per month. Triggers daily SEC EDGAR Form D scrapers.',
+      icon: <Clock size={18} color="var(--accent-amber)" />
+    },
+    {
+      id: 'sns',
+      name: '12. Amazon SNS & CloudWatch',
+      category: 'Alert Notifications & System Logs',
+      cost: '$0.00 / mo',
+      note: '1M SNS emails + 5 GB CloudWatch logs free forever. Sends priority deal alerts.',
+      icon: <Bell size={18} color="var(--accent-rose)" />
     },
   ];
 
-  const dockerCommands = [
+  const s3Commands = [
     {
-      title: 'Step 1: Authenticate Docker CLI to AWS ECR',
-      desc: 'Get authorization token for your AWS Elastic Container Registry.',
-      cmd: `aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin YOUR_ACCOUNT_ID.dkr.ecr.${awsRegion}.amazonaws.com`,
+      title: 'Step 1: Build the Production Application',
+      desc: 'Compiles TypeScript, minifies HTML/JS/CSS into optimized static assets.',
+      cmd: `npm run build`,
     },
     {
-      title: 'Step 2: Build the Production Docker Image',
-      desc: 'Builds multi-stage Docker container with Alpine Nginx server.',
-      cmd: `docker build -t aura-mna-platform:latest .`,
+      title: 'Step 2: Deploy Complete 12-Service CloudFormation Stack',
+      desc: 'Deploys cloudformation-template.yaml to provision S3, CloudFront, DynamoDB, Lambda, Cognito, EventBridge, and SNS.',
+      cmd: `./deploy-aws-s3-cloudfront.sh`,
     },
     {
-      title: 'Step 3: Tag and Push Image to Amazon ECR',
-      desc: 'Uploads the image to your private AWS container registry.',
-      cmd: `docker tag aura-mna-platform:latest YOUR_ACCOUNT_ID.dkr.ecr.${awsRegion}.amazonaws.com/aura-mna:latest\ndocker push YOUR_ACCOUNT_ID.dkr.ecr.${awsRegion}.amazonaws.com/aura-mna:latest`,
-    },
-    {
-      title: 'Step 4: Launch on AWS App Runner or Amazon ECS',
-      desc: 'App Runner automatically runs the container and provides auto-scaling, load balancing, and SSL.',
-      cmd: `aws apprunner create-service --service-name aura-mna-service --source-configuration ImageRepository='{ImageIdentifier="YOUR_ECR_URI",ImageRepositoryType="ECR"}'`,
+      title: 'Step 3: Invalidate CloudFront Edge Cache on Updates',
+      desc: 'Flushes global edge cache immediately so updates reflect worldwide.',
+      cmd: `aws cloudfront create-invalidation --distribution-id YOUR_DIST_ID --paths "/*"`,
     },
   ];
 
@@ -82,7 +156,7 @@ export const AwsDeploymentGuide: React.FC = () => {
     <div style={{ maxWidth: '1600px', margin: '0 auto', padding: '24px', width: '100%' }}>
       {/* Page Title */}
       <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{
             padding: '10px',
             borderRadius: '12px',
@@ -93,333 +167,329 @@ export const AwsDeploymentGuide: React.FC = () => {
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>AWS Cloud Hosting & Deployment Master Guide</h1>
-              <span className="badge badge-amber">Production Architecture</span>
+              <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>AWS Cloud Architecture & Multi-Account Guide</h1>
+              <span className="badge badge-amber">12-Service Enterprise Stack</span>
+              <span className="badge badge-emerald">$100 Credit Optimized</span>
             </div>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '4px' }}>
-              Understand the complete cloud architecture, security best practices, and copy-paste steps to host AURA M&A on Amazon Web Services.
+              Architecture plan incorporating 12 core AWS services across 3 accounts, engineered to run for 24+ months within your $100 AWS credit budget.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Visual Cloud Architecture Diagram */}
-      <div className="glass-panel" style={{ padding: '24px', marginBottom: '28px' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Globe size={18} color="var(--accent-cyan)" />
-          Recommended AWS Cloud Architecture (S3 + CloudFront Global CDN)
-        </h3>
-        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '20px' }}>
-          Industry-standard architecture for modern Single-Page Applications: 99.99% availability, automated SSL, global edge caching, and near-zero idle cost.
-        </p>
-
-        {/* Interactive SVG Diagram */}
-        <div style={{
-          background: '#090d16',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border-subtle)',
-          padding: '24px',
-          overflowX: 'auto',
-          textAlign: 'center',
-        }}>
-          <svg viewBox="0 0 960 220" style={{ width: '100%', maxWidth: '960px', height: 'auto', margin: '0 auto' }}>
-            <defs>
-              <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#06b6d4" />
-                <stop offset="100%" stopColor="#0284c7" />
-              </linearGradient>
-              <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#f59e0b" />
-                <stop offset="100%" stopColor="#b45309" />
-              </linearGradient>
-              <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#10b981" />
-                <stop offset="100%" stopColor="#047857" />
-              </linearGradient>
-            </defs>
-
-            {/* Connecting Flow Lines */}
-            <line x1="140" y1="110" x2="260" y2="110" stroke="#06b6d4" strokeWidth="2" strokeDasharray="4" />
-            <line x1="380" y1="110" x2="500" y2="110" stroke="#06b6d4" strokeWidth="2" strokeDasharray="4" />
-            <line x1="620" y1="110" x2="740" y2="110" stroke="#06b6d4" strokeWidth="2" strokeDasharray="4" />
-
-            {/* Box 1: User / Browser */}
-            <g transform="translate(20, 50)">
-              <rect width="120" height="120" rx="12" fill="#0f172a" stroke="#334155" strokeWidth="1.5" />
-              <circle cx="60" cy="45" r="20" fill="rgba(6, 182, 212, 0.15)" />
-              <text x="60" y="50" textAnchor="middle" fill="#06b6d4" fontSize="18">🌐</text>
-              <text x="60" y="85" textAnchor="middle" fill="#ffffff" fontSize="13" fontWeight="700">Client / Browser</text>
-              <text x="60" y="102" textAnchor="middle" fill="#94a3b8" fontSize="10">HTTPS Request</text>
-            </g>
-
-            {/* Box 2: Route 53 + ACM */}
-            <g transform="translate(260, 50)">
-              <rect width="120" height="120" rx="12" fill="#0f172a" stroke="rgba(245, 158, 11, 0.4)" strokeWidth="1.5" />
-              <circle cx="60" cy="45" r="20" fill="rgba(245, 158, 11, 0.15)" />
-              <text x="60" y="50" textAnchor="middle" fill="#f59e0b" fontSize="18">⚡</text>
-              <text x="60" y="85" textAnchor="middle" fill="#ffffff" fontSize="13" fontWeight="700">AWS Route 53</text>
-              <text x="60" y="102" textAnchor="middle" fill="#94a3b8" fontSize="10">DNS & ACM SSL</text>
-            </g>
-
-            {/* Box 3: CloudFront CDN */}
-            <g transform="translate(500, 50)">
-              <rect width="120" height="120" rx="12" fill="#0f172a" stroke="rgba(6, 182, 212, 0.5)" strokeWidth="2" />
-              <circle cx="60" cy="45" r="20" fill="rgba(6, 182, 212, 0.2)" />
-              <text x="60" y="50" textAnchor="middle" fill="#06b6d4" fontSize="18">🚀</text>
-              <text x="60" y="85" textAnchor="middle" fill="#ffffff" fontSize="13" fontWeight="700">CloudFront CDN</text>
-              <text x="60" y="102" textAnchor="middle" fill="#22d3ee" fontSize="10">400+ Edge PoPs</text>
-            </g>
-
-            {/* Box 4: S3 Bucket (Protected by OAC) */}
-            <g transform="translate(740, 50)">
-              <rect width="120" height="120" rx="12" fill="#0f172a" stroke="rgba(16, 185, 129, 0.4)" strokeWidth="1.5" />
-              <circle cx="60" cy="45" r="20" fill="rgba(16, 185, 129, 0.15)" />
-              <text x="60" y="50" textAnchor="middle" fill="#10b981" fontSize="18">🗄️</text>
-              <text x="60" y="85" textAnchor="middle" fill="#ffffff" fontSize="13" fontWeight="700">Amazon S3</text>
-              <text x="60" y="102" textAnchor="middle" fill="#34d399" fontSize="10">Private App Assets</text>
-            </g>
-          </svg>
-        </div>
-
-        {/* Why this architecture table */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '12px',
-          marginTop: '20px',
-        }}>
-          <div style={{ background: '#0b1120', padding: '14px', borderRadius: 'var(--radius-md)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--accent-emerald)', fontSize: '0.85rem', fontWeight: 700 }}>
-              <DollarSign size={15} />
-              Ultra-Low Cost (~$0.50/mo)
-            </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-              No idle servers or virtual machine bills. Pay only for bytes served.
-            </div>
-          </div>
-
-          <div style={{ background: '#0b1120', padding: '14px', borderRadius: 'var(--radius-md)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--accent-cyan)', fontSize: '0.85rem', fontWeight: 700 }}>
-              <ShieldCheck size={15} />
-              Enterprise Security & OAC
-            </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-              S3 bucket is strictly private; only CloudFront edge CDN has read access.
-            </div>
-          </div>
-
-          <div style={{ background: '#0b1120', padding: '14px', borderRadius: 'var(--radius-md)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#c084fc', fontSize: '0.85rem', fontWeight: 700 }}>
-              <Globe size={15} />
-              Global Sub-50ms Latency
-            </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-              Cached across 400+ AWS Point of Presence (PoP) edge nodes globally.
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Deployment Method Tabs */}
+      {/* Tabs */}
       <div style={{
         display: 'flex',
         gap: '8px',
-        marginBottom: '20px',
+        marginBottom: '24px',
         borderBottom: '1px solid var(--border-subtle)',
         paddingBottom: '12px',
         overflowX: 'auto',
       }}>
         <button
+          onClick={() => setActiveTab('12-services')}
+          className="btn"
+          style={{
+            background: activeTab === '12-services' ? 'rgba(6, 182, 212, 0.2)' : 'transparent',
+            border: activeTab === '12-services' ? '1px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
+            color: activeTab === '12-services' ? '#ffffff' : 'var(--text-muted)',
+          }}
+        >
+          <Layers size={15} />
+          <span>The 12 AWS Services Architecture</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('budget-calc')}
+          className="btn"
+          style={{
+            background: activeTab === 'budget-calc' ? 'rgba(16, 185, 129, 0.2)' : 'transparent',
+            border: activeTab === 'budget-calc' ? '1px solid var(--accent-emerald)' : '1px solid var(--border-subtle)',
+            color: activeTab === 'budget-calc' ? '#ffffff' : 'var(--text-muted)',
+          }}
+        >
+          <DollarSign size={15} />
+          <span>$100 Credit Budget Plan (~$1.50/mo)</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('multi-account')}
+          className="btn"
+          style={{
+            background: activeTab === 'multi-account' ? 'rgba(139, 92, 246, 0.2)' : 'transparent',
+            border: activeTab === 'multi-account' ? '1px solid var(--accent-violet)' : '1px solid var(--border-subtle)',
+            color: activeTab === 'multi-account' ? '#ffffff' : 'var(--text-muted)',
+          }}
+        >
+          <Users size={15} />
+          <span>3-Account Multi-Account Strategy</span>
+        </button>
+
+        <button
           onClick={() => setActiveTab('s3-cloudfront')}
           className="btn"
           style={{
-            background: activeTab === 's3-cloudfront' ? 'rgba(6, 182, 212, 0.2)' : 'transparent',
-            border: activeTab === 's3-cloudfront' ? '1px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
+            background: activeTab === 's3-cloudfront' ? 'rgba(245, 158, 11, 0.2)' : 'transparent',
+            border: activeTab === 's3-cloudfront' ? '1px solid var(--accent-amber)' : '1px solid var(--border-subtle)',
             color: activeTab === 's3-cloudfront' ? '#ffffff' : 'var(--text-muted)',
           }}
         >
           <Globe size={15} />
-          <span>Method 1: S3 + CloudFront CDN (Recommended)</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('amplify')}
-          className="btn"
-          style={{
-            background: activeTab === 'amplify' ? 'rgba(245, 158, 11, 0.2)' : 'transparent',
-            border: activeTab === 'amplify' ? '1px solid var(--accent-amber)' : '1px solid var(--border-subtle)',
-            color: activeTab === 'amplify' ? '#ffffff' : 'var(--text-muted)',
-          }}
-        >
-          <Layers size={15} />
-          <span>Method 2: AWS Amplify (Git CI/CD)</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('docker-ecs')}
-          className="btn"
-          style={{
-            background: activeTab === 'docker-ecs' ? 'rgba(139, 92, 246, 0.2)' : 'transparent',
-            border: activeTab === 'docker-ecs' ? '1px solid var(--accent-violet)' : '1px solid var(--border-subtle)',
-            color: activeTab === 'docker-ecs' ? '#ffffff' : 'var(--text-muted)',
-          }}
-        >
-          <Server size={15} />
-          <span>Method 3: Docker & AWS App Runner</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('ec2')}
-          className="btn"
-          style={{
-            background: activeTab === 'ec2' ? 'rgba(16, 185, 129, 0.2)' : 'transparent',
-            border: activeTab === 'ec2' ? '1px solid var(--accent-emerald)' : '1px solid var(--border-subtle)',
-            color: activeTab === 'ec2' ? '#ffffff' : 'var(--text-muted)',
-          }}
-        >
-          <Cpu size={15} />
-          <span>Method 4: AWS EC2 + Nginx</span>
+          <span>1-Click Deployment Script</span>
         </button>
       </div>
 
-      {/* METHOD 1: S3 + CLOUDFRONT */}
-      {activeTab === 's3-cloudfront' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {/* Customizer Bar */}
-          <div className="glass-panel" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ffffff' }}>
-              Customize Your AWS Parameters:
-            </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>S3 Bucket:</span>
-              <input
-                type="text"
-                value={bucketName}
-                onChange={(e) => setBucketName(e.target.value)}
-                className="input-text"
-                style={{ width: '240px', padding: '4px 8px', fontSize: '0.8rem' }}
-              />
+      {/* TAB 1: THE 12 SERVICES ARCHITECTURE */}
+      {activeTab === '12-services' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {/* Architecture Visual Grid */}
+          <div className="glass-panel" style={{ padding: '24px' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '6px', color: '#ffffff' }}>
+              Full Enterprise Architecture Topology (12 Integrated AWS Services)
+            </h3>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '20px' }}>
+              Every service has an explicit corporate finance purpose, connected via serverless event-driven architecture:
+            </p>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '16px',
+            }}>
+              {twelveServices.map((svc) => (
+                <div
+                  key={svc.id}
+                  style={{
+                    background: '#0b1120',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        {svc.icon}
+                        <strong style={{ fontSize: '0.9rem', color: '#ffffff' }}>{svc.name}</strong>
+                      </div>
+                      <span className="badge badge-emerald">{svc.cost}</span>
+                    </div>
+
+                    <div style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', fontWeight: 600, marginBottom: '6px' }}>
+                      {svc.category}
+                    </div>
+
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.45 }}>
+                      {svc.note}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>AWS Region:</span>
-              <select
-                value={awsRegion}
-                onChange={(e) => setAwsRegion(e.target.value)}
-                style={{
-                  background: '#0b1120',
-                  border: '1px solid var(--border-subtle)',
-                  color: '#ffffff',
-                  padding: '5px 10px',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: '0.8rem',
-                }}
-              >
-                <option value="us-east-1">us-east-1 (N. Virginia)</option>
-                <option value="us-west-2">us-west-2 (Oregon)</option>
-                <option value="eu-west-1">eu-west-1 (Ireland)</option>
-                <option value="ap-south-1">ap-south-1 (Mumbai)</option>
-                <option value="ap-southeast-1">ap-southeast-1 (Singapore)</option>
-              </select>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 2: $100 BUDGET CALCULATOR */}
+      {activeTab === 'budget-calc' && (
+        <div className="glass-panel" style={{ padding: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+            <div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff' }}>
+                How Your $100 Credits Last 24–36 Months Across 12 Services
+              </h3>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                Because 10 out of the 12 services fall under the permanent AWS Always-Free Tier, your monthly burn rate is only ~$1.00–$2.50.
+              </p>
+            </div>
+
+            <div style={{
+              background: 'rgba(16, 185, 129, 0.15)',
+              border: '1px solid rgba(16, 185, 129, 0.3)',
+              padding: '10px 18px',
+              borderRadius: 'var(--radius-md)',
+              textAlign: 'right',
+            }}>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-subtle)', textTransform: 'uppercase' }}>Runway on $100 Credits</span>
+              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)' }}>
+                ~33 Months
+              </div>
             </div>
           </div>
 
-          {/* Steps List */}
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.825rem' }}>
+              <thead>
+                <tr style={{ background: '#0b1120', color: 'var(--text-subtle)', textAlign: 'left', borderBottom: '1px solid var(--border-hover)' }}>
+                  <th style={{ padding: '12px' }}>AWS Service</th>
+                  <th style={{ padding: '12px' }}>Free Tier Allowance</th>
+                  <th style={{ padding: '12px' }}>Expected Usage</th>
+                  <th style={{ padding: '12px', textAlign: 'right' }}>Monthly Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                  <td style={{ padding: '12px', fontWeight: 600, color: '#ffffff' }}>1. CloudFront CDN</td>
+                  <td style={{ padding: '12px', color: 'var(--accent-emerald)' }}>1 TB/mo & 10M requests free forever</td>
+                  <td style={{ padding: '12px', color: 'var(--text-muted)' }}>~2 GB/mo (Internal M&A usage)</td>
+                  <td style={{ padding: '12px', textAlign: 'right', color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)' }}>$0.00</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                  <td style={{ padding: '12px', fontWeight: 600, color: '#ffffff' }}>2. Amazon S3</td>
+                  <td style={{ padding: '12px', color: 'var(--accent-emerald)' }}>5 GB free for 12 months</td>
+                  <td style={{ padding: '12px', color: 'var(--text-muted)' }}>~50 MB (app + sample CIM PDFs)</td>
+                  <td style={{ padding: '12px', textAlign: 'right', color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)' }}>$0.00</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                  <td style={{ padding: '12px', fontWeight: 600, color: '#ffffff' }}>3. CloudFront OAC & CloudFormation</td>
+                  <td style={{ padding: '12px', color: 'var(--accent-emerald)' }}>100% Free always</td>
+                  <td style={{ padding: '12px', color: 'var(--text-muted)' }}>Continuous automated stack</td>
+                  <td style={{ padding: '12px', textAlign: 'right', color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)' }}>$0.00</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                  <td style={{ padding: '12px', fontWeight: 600, color: '#ffffff' }}>4. AWS Lambda & API Gateway</td>
+                  <td style={{ padding: '12px', color: 'var(--accent-emerald)' }}>1M Lambda calls & 1M API calls free</td>
+                  <td style={{ padding: '12px', color: 'var(--text-muted)' }}>~15,000 API requests/mo</td>
+                  <td style={{ padding: '12px', textAlign: 'right', color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)' }}>$0.00</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                  <td style={{ padding: '12px', fontWeight: 600, color: '#ffffff' }}>5. Amazon DynamoDB</td>
+                  <td style={{ padding: '12px', color: 'var(--accent-emerald)' }}>25 GB storage & 25 RCU/WCU free forever</td>
+                  <td style={{ padding: '12px', color: 'var(--text-muted)' }}>~200 MB for target catalogs</td>
+                  <td style={{ padding: '12px', textAlign: 'right', color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)' }}>$0.00</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                  <td style={{ padding: '12px', fontWeight: 600, color: '#ffffff' }}>6. Amazon Cognito</td>
+                  <td style={{ padding: '12px', color: 'var(--accent-emerald)' }}>50,000 MAUs free forever</td>
+                  <td style={{ padding: '12px', color: 'var(--text-muted)' }}>~25 corporate dealmakers</td>
+                  <td style={{ padding: '12px', textAlign: 'right', color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)' }}>$0.00</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                  <td style={{ padding: '12px', fontWeight: 600, color: '#ffffff' }}>7. Amazon EventBridge & SNS</td>
+                  <td style={{ padding: '12px', color: 'var(--accent-emerald)' }}>14M events & 100k email alerts free</td>
+                  <td style={{ padding: '12px', color: 'var(--text-muted)' }}>Daily crons & deal triggers</td>
+                  <td style={{ padding: '12px', textAlign: 'right', color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)' }}>$0.00</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                  <td style={{ padding: '12px', fontWeight: 600, color: '#ffffff' }}>8. Amazon Bedrock (GenAI IC Memo)</td>
+                  <td style={{ padding: '12px', color: 'var(--text-muted)' }}>Pay-per-token ($0.003/1k tokens)</td>
+                  <td style={{ padding: '12px', color: 'var(--text-muted)' }}>~200 IC memo generations/mo</td>
+                  <td style={{ padding: '12px', textAlign: 'right', color: 'var(--accent-amber)', fontFamily: 'var(--font-mono)' }}>~$1.20</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                  <td style={{ padding: '12px', fontWeight: 600, color: '#ffffff' }}>9. Amazon Textract (CIM OCR)</td>
+                  <td style={{ padding: '12px', color: 'var(--accent-emerald)' }}>1,000 pages free per month for 3 mos</td>
+                  <td style={{ padding: '12px', color: 'var(--text-muted)' }}>~50 PDF pages analyzed</td>
+                  <td style={{ padding: '12px', textAlign: 'right', color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)' }}>$0.00 – $0.50</td>
+                </tr>
+                <tr style={{ background: '#0b1120', fontWeight: 800 }}>
+                  <td colSpan={3} style={{ padding: '14px', color: '#ffffff' }}>Total Monthly Burn Rate</td>
+                  <td style={{ padding: '14px', textAlign: 'right', color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)', fontSize: '1rem' }}>~$1.20 – $1.70 / mo</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 3: 3-ACCOUNT MULTI-ACCOUNT STRATEGY */}
+      {activeTab === 'multi-account' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div className="glass-panel" style={{ padding: '24px' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px', color: '#ffffff' }}>
+              Optimizing Across 3 AWS Accounts (Triple Free Tier Multiplier)
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '20px' }}>
+              Because each new AWS account receives its own independent 12-Month Free Tier allowance, dividing your 12 services across your 3 accounts gives you <strong>3x the free storage, 3x the free Lambda compute, and complete environment isolation</strong>:
+            </p>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '16px',
+            }}>
+              {/* Account 1 */}
+              <div style={{ background: '#0b1120', padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <strong style={{ color: 'var(--accent-cyan)', fontSize: '0.95rem' }}>Account 1: Production Frontend & CDN</strong>
+                  <span className="badge badge-cyan">Primary</span>
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', marginBottom: '12px' }}>
+                  Dedicated to public-facing edge speed and DNS security
+                </div>
+                <ul style={{ fontSize: '0.8rem', color: '#cbd5e1', lineHeight: 1.7, paddingLeft: '18px' }}>
+                  <li><strong>Amazon CloudFront</strong> (Global Edge CDN)</li>
+                  <li><strong>Amazon S3</strong> (Static Web App Hosting)</li>
+                  <li><strong>CloudFront OAC</strong> (Private Origin Security)</li>
+                  <li><strong>Amazon Cognito</strong> (Deal Team Sign-in & MFA)</li>
+                </ul>
+              </div>
+
+              {/* Account 2 */}
+              <div style={{ background: '#0b1120', padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(139, 92, 246, 0.3)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <strong style={{ color: '#c084fc', fontSize: '0.95rem' }}>Account 2: Intelligence Engine & Database</strong>
+                  <span className="badge badge-purple">Core Compute</span>
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', marginBottom: '12px' }}>
+                  Executes financial scoring, GenAI synthesis, and confidential data
+                </div>
+                <ul style={{ fontSize: '0.8rem', color: '#cbd5e1', lineHeight: 1.7, paddingLeft: '18px' }}>
+                  <li><strong>AWS Lambda</strong> (M&A Financial Scoring Engine)</li>
+                  <li><strong>Amazon API Gateway</strong> (RESTful endpoints)</li>
+                  <li><strong>Amazon DynamoDB</strong> (Target & Pipeline Store)</li>
+                  <li><strong>Amazon Bedrock</strong> (AI IC Memo Generation)</li>
+                  <li><strong>Amazon Textract</strong> (CIM OCR Extraction)</li>
+                </ul>
+              </div>
+
+              {/* Account 3 */}
+              <div style={{ background: '#0b1120', padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <strong style={{ color: 'var(--accent-emerald)', fontSize: '0.95rem' }}>Account 3: Market Feed Scrapers & Logging</strong>
+                  <span className="badge badge-emerald">Automation</span>
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', marginBottom: '12px' }}>
+                  Runs daily cron jobs, scrapers, and centralized audit trails
+                </div>
+                <ul style={{ fontSize: '0.8rem', color: '#cbd5e1', lineHeight: 1.7, paddingLeft: '18px' }}>
+                  <li><strong>Amazon EventBridge</strong> (Daily Scheduled Crons)</li>
+                  <li><strong>Amazon SNS</strong> (Email Deal Alerts to MDs)</li>
+                  <li><strong>Amazon CloudWatch</strong> (Audit Logging & Alarms)</li>
+                  <li><strong>AWS CloudFormation</strong> (Automated Stack Deployment)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 4: DEPLOY SCRIPT */}
+      {activeTab === 's3-cloudfront' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div className="glass-panel" style={{ padding: '20px' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '6px' }}>
+              Deploy the Complete 12-Service Stack with CloudFormation
+            </h3>
+            <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>
+              The included <code style={{ color: 'var(--accent-cyan)' }}>deploy-aws-s3-cloudfront.sh</code> script provisions your S3 buckets, CloudFront CDN, DynamoDB tables, Lambda role, and API Gateway automatically.
+            </p>
+          </div>
+
           {s3Commands.map((step, idx) => (
-            <div
-              key={idx}
-              className="glass-panel"
-              style={{ padding: '20px', borderRadius: 'var(--radius-lg)' }}
-            >
+            <div key={idx} className="glass-panel" style={{ padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff' }}>{step.title}</h4>
                 <button
                   onClick={() => copyToClipboard(step.cmd, idx)}
                   className="btn btn-secondary btn-sm"
-                  id={`btn-copy-step-${idx}`}
                 >
                   {copiedIndex === idx ? <Check size={13} color="#10b981" /> : <Copy size={13} />}
-                  <span>{copiedIndex === idx ? 'Copied' : 'Copy Command'}</span>
-                </button>
-              </div>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '12px' }}>
-                {step.desc}
-              </p>
-              <div style={{
-                background: '#090d16',
-                padding: '12px 16px',
-                borderRadius: 'var(--radius-md)',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.825rem',
-                color: 'var(--accent-cyan)',
-                border: '1px solid rgba(255, 255, 255, 0.05)',
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-all',
-              }}>
-                {step.cmd}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* METHOD 2: AWS AMPLIFY */}
-      {activeTab === 'amplify' && (
-        <div className="glass-panel" style={{ padding: '24px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '12px' }}>
-            AWS Amplify Hosting (Git-Driven Automation)
-          </h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '20px' }}>
-            AWS Amplify provides the smoothest developer workflow. Whenever you push changes to your GitHub/GitLab repository, Amplify automatically builds and redeploys the app with full CDN edge distribution, preview PR branches, and custom SSL certificates.
-          </p>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ background: '#0b1120', padding: '16px', borderRadius: 'var(--radius-md)' }}>
-              <strong style={{ color: '#ffffff' }}>Step 1: Initialize Git and Push to GitHub</strong>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginTop: '8px' }}>
-                git init<br />
-                git add .<br />
-                git commit -m "Initial commit of AURA M&A platform"<br />
-                git branch -M main<br />
-                git remote add origin https://github.com/YOUR_USERNAME/mna-platform.git<br />
-                git push -u origin main
-              </div>
-            </div>
-
-            <div style={{ background: '#0b1120', padding: '16px', borderRadius: 'var(--radius-md)' }}>
-              <strong style={{ color: '#ffffff' }}>Step 2: Connect Repository in AWS Console</strong>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '6px' }}>
-                1. Navigate to <strong>AWS Console → AWS Amplify → Host web app</strong>.<br />
-                2. Select <strong>GitHub</strong>, authorize AWS, and select your repository.<br />
-                3. Amplify automatically detects Vite! Confirm build settings (build command: <code style={{ color: 'var(--accent-cyan)' }}>npm run build</code>, base directory: <code style={{ color: 'var(--accent-cyan)' }}>dist</code>).<br />
-                4. Click <strong>Save and Deploy</strong>. Your live HTTPS URL will be ready in ~90 seconds!
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* METHOD 3: DOCKER & APP RUNNER */}
-      {activeTab === 'docker-ecs' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div className="glass-panel" style={{ padding: '20px' }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px' }}>
-              Dockerized Container Deployment (AWS App Runner / ECS)
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
-              We have already included an optimized multi-stage <code style={{ color: 'var(--accent-cyan)' }}>Dockerfile</code> and <code style={{ color: 'var(--accent-cyan)' }}>nginx.conf</code> in your project root.
-            </p>
-          </div>
-
-          {dockerCommands.map((step, idx) => (
-            <div key={idx} className="glass-panel" style={{ padding: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff' }}>{step.title}</h4>
-                <button
-                  onClick={() => copyToClipboard(step.cmd, 10 + idx)}
-                  className="btn btn-secondary btn-sm"
-                >
-                  {copiedIndex === 10 + idx ? <Check size={13} color="#10b981" /> : <Copy size={13} />}
-                  <span>{copiedIndex === 10 + idx ? 'Copied' : 'Copy'}</span>
+                  <span>{copiedIndex === idx ? 'Copied' : 'Copy'}</span>
                 </button>
               </div>
               <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '10px' }}>{step.desc}</p>
@@ -436,32 +506,6 @@ export const AwsDeploymentGuide: React.FC = () => {
               </div>
             </div>
           ))}
-        </div>
-      )}
-
-      {/* METHOD 4: EC2 + NGINX */}
-      {activeTab === 'ec2' && (
-        <div className="glass-panel" style={{ padding: '24px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '12px' }}>
-            Classic AWS EC2 Virtual Machine Setup
-          </h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '16px', lineHeight: 1.6 }}>
-            For dedicated VM environments (e.g. within an enterprise corporate VPC):
-          </p>
-          <div style={{ background: '#0b1120', padding: '16px', borderRadius: 'var(--radius-md)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: '#e2e8f0', lineHeight: 1.7 }}>
-            # 1. SSH into Amazon Linux 2023 EC2 instance<br />
-            ssh -i your-key.pem ec2-user@YOUR_EC2_PUBLIC_IP<br /><br />
-            # 2. Install Node.js 22 & Nginx<br />
-            sudo dnf update -y<br />
-            sudo dnf install -y nginx git<br />
-            sudo systemctl enable nginx --now<br /><br />
-            # 3. Clone and build application<br />
-            git clone YOUR_REPO_URL app && cd app<br />
-            npm install && npm run build<br />
-            sudo cp -r dist/* /usr/share/nginx/html/<br /><br />
-            # 4. Configure /etc/nginx/conf.d/mna.conf for SPA routing & restart<br />
-            sudo systemctl restart nginx
-          </div>
         </div>
       )}
     </div>

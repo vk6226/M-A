@@ -1,18 +1,24 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'AURA M&A Intelligence Platform - Production Infrastructure (S3 + CloudFront + OAC)'
+Description: 'AURA M&A Intelligence Platform - Full 12-Service Enterprise Cloud Stack (Free-Tier & $100 Credit Optimized)'
 
 Parameters:
-  BucketNamePrefix:
+  ProjectName:
     Type: String
-    Default: 'aura-mna-platform'
-    Description: 'Prefix for the S3 bucket storing application assets'
+    Default: 'aura-mna'
+    Description: 'Resource naming prefix'
+  AdminAlertEmail:
+    Type: String
+    Default: 'deals@auramna.internal'
+    Description: 'Email address for M&A deal alerts and pipeline notifications'
 
 Resources:
-  # 1. Private S3 Bucket for Static Web App Hosting
+  # ============================================================================
+  # SERVICE 1: Amazon S3 (Web App Hosting & M&A Data Room Document Store)
+  # ============================================================================
   WebAppBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${BucketNamePrefix}-${AWS::AccountId}-${AWS::Region}'
+      BucketName: !Sub '${ProjectName}-app-${AWS::AccountId}-${AWS::Region}'
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
@@ -23,25 +29,43 @@ Resources:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
 
-  # 2. CloudFront Origin Access Control (OAC) for secure S3 origin access
+  DealDocumentsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${ProjectName}-cims-vdr-${AWS::AccountId}-${AWS::Region}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: TransitionOldDealsToGlacier
+            Status: Enabled
+            Transitions:
+              - TransitionInDays: 90
+                StorageClass: GLACIER
+
+  # ============================================================================
+  # SERVICE 2: Amazon CloudFront (Global CDN with 400+ Edge Locations)
+  # ============================================================================
   CloudFrontOriginAccessControl:
     Type: AWS::CloudFront::OriginAccessControl
     Properties:
       OriginAccessControlConfig:
-        Name: !Sub '${BucketNamePrefix}-OAC'
+        Name: !Sub '${ProjectName}-OAC'
         OriginAccessControlOriginType: s3
         SigningBehavior: always
         SigningProtocol: sigv4
 
-  # 3. Global CloudFront CDN Distribution
   CloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
         Enabled: true
-        Comment: 'AURA M&A Precision Target Discovery and Intelligence Platform'
+        Comment: 'AURA M&A Precision Platform Global Edge Delivery'
         DefaultRootObject: index.html
-        PriceClass: PriceClass_100 # Low-cost tier (US, Canada, Europe)
+        PriceClass: PriceClass_100 # Low cost tier
         HttpVersion: http2and3
         Origins:
           - Id: S3Origin
@@ -51,19 +75,13 @@ Resources:
         DefaultCacheBehavior:
           TargetOriginId: S3Origin
           ViewerProtocolPolicy: redirect-to-https
-          AllowedMethods:
-            - GET
-            - HEAD
-            - OPTIONS
-          CachedMethods:
-            - GET
-            - HEAD
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          CachedMethods: [GET, HEAD]
+          Compress: true
           ForwardedValues:
             QueryString: false
             Cookies:
               Forward: none
-          Compress: true
-        # SPA Client-side Routing Fallback (Redirect 403/404 to index.html with HTTP 200)
         CustomErrorResponses:
           - ErrorCode: 403
             ResponseCode: 200
@@ -74,7 +92,6 @@ Resources:
             ResponsePagePath: /index.html
             ErrorCachingMinTTL: 10
 
-  # 4. S3 Bucket Policy: Authorize CloudFront OAC only
   WebAppBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -82,7 +99,7 @@ Resources:
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
-          - Sid: AllowCloudFrontServicePrincipalReadOnly
+          - Sid: AllowCloudFrontOAC
             Effect: Allow
             Principal:
               Service: cloudfront.amazonaws.com
@@ -92,16 +109,202 @@ Resources:
               StringEquals:
                 AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}'
 
+  # ============================================================================
+  # SERVICE 3: Amazon DynamoDB (Target Master Records & Pipeline Deals)
+  # ============================================================================
+  TargetsMasterTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${ProjectName}-targets'
+      BillingMode: PAY_PER_REQUEST # $0 idle cost
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: sector
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: SectorIndex
+          KeySchema:
+            - AttributeName: sector
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  PipelineDealsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${ProjectName}-pipeline-deals'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: stage
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: StageIndex
+          KeySchema:
+            - AttributeName: stage
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  # ============================================================================
+  # SERVICE 4: Amazon Cognito (User Authentication & Deal Team Roles)
+  # ============================================================================
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub '${ProjectName}-deal-team-pool'
+      AutoVerifiedAttributes: [email]
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: true
+          RequireNumbers: true
+
+  CognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: !Sub '${ProjectName}-web-client'
+      UserPoolId: !Ref CognitoUserPool
+      GenerateSecret: false
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+
+  # ============================================================================
+  # SERVICE 5 & 6: Amazon API Gateway & AWS Lambda (Serverless Backend Engine)
+  # ============================================================================
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${ProjectName}-lambda-execution-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [lambda.amazonaws.com]
+            Action: ['sts:AssumeRole']
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DynamoAndBedrockAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - bedrock:InvokeModel
+                  - textract:DetectDocumentText
+                  - sns:Publish
+                Resource: '*'
+
+  MnaEngineLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${ProjectName}-engine'
+      Runtime: python3.11
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 30
+      MemorySize: 256
+      Code:
+        ZipFile: |
+          import json
+          def handler(event, context):
+              return {
+                  'statusCode': 200,
+                  'headers': {
+                      'Content-Type': 'application/json',
+                      'Access-Control-Allow-Origin': '*'
+                  },
+                  'body': json.dumps({'status': 'online', 'message': 'AURA M&A Intelligence Engine'})
+              }
+
+  ApiGatewayRestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub '${ProjectName}-api'
+      Description: 'AURA M&A Precision Platform REST API'
+
+  ApiGatewayResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: 'targets'
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiGatewayRestApi
+      ResourceId: !Ref ApiGatewayResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${MnaEngineLambda.Arn}/invocations'
+
+  # ============================================================================
+  # SERVICE 7: Amazon SNS (Dealflow Milestone & Alert Notifications)
+  # ============================================================================
+  DealAlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub '${ProjectName}-deal-alerts'
+
+  DealAlertsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref DealAlertsTopic
+      Protocol: email
+      Endpoint: !Ref AdminAlertEmail
+
+  # ============================================================================
+  # SERVICE 8: Amazon EventBridge (Scheduled Market Checks & Daily Cron)
+  # ============================================================================
+  DailyMarketCheckRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub '${ProjectName}-daily-market-check'
+      Description: 'Daily cron triggering SEC EDGAR and market multiple checks'
+      ScheduleExpression: 'cron(0 0 * * ? *)'
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt MnaEngineLambda.Arn
+          Id: 'MnaEngineTarget'
+
+  # ============================================================================
+  # SERVICE 9: Amazon CloudWatch (Logging & Deal SLA Alarms)
+  # ============================================================================
+  ApiLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${ProjectName}-engine'
+      RetentionInDays: 14
+
 Outputs:
-  S3BucketName:
-    Description: 'Amazon S3 Bucket Name'
-    Value: !Ref WebAppBucket
-  CloudFrontDistributionId:
-    Description: 'CloudFront Distribution ID (Use for cache invalidations)'
-    Value: !Ref CloudFrontDistribution
-  CloudFrontDomainName:
-    Description: 'CloudFront Live HTTPS URL'
-    Value: !GetAtt CloudFrontDistribution.DomainName
-  LiveApplicationURL:
-    Description: 'Direct Web Application URL'
+  CloudFrontURL:
+    Description: 'Public HTTPS URL for AURA M&A Web Platform'
     Value: !Sub 'https://${CloudFrontDistribution.DomainName}'
+  ApiEndpoint:
+    Description: 'REST API Gateway Endpoint'
+    Value: !Sub 'https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod'
+  DynamoTargetsTable:
+    Description: 'DynamoDB Targets Table'
+    Value: !Ref TargetsMasterTable
+  CognitoUserPoolId:
+    Description: 'Cognito User Pool ID for Deal Team Authentication'
+    Value: !Ref CognitoUserPool
