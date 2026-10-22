@@ -12,6 +12,7 @@ export type OwnershipType =
   | 'PE Sponsor-Backed'
   | 'VC Series B/C'
   | 'Public Carve-Out'
+  | 'Public (Listed)'
   | 'Bootstrap';
 
 export type DealReadiness = 

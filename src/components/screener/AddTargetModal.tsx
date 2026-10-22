@@ -19,7 +19,7 @@ import {
   Zap
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { generateCompanyWithAi } from '../../utils/aiCompanyGenerator';
+import { generateCompanyWithAi, generateGlobalMegaUniverse } from '../../utils/aiCompanyGenerator';
 
 export const AddTargetModal: React.FC = () => {
   const { isAddTargetOpen, setIsAddTargetOpen, addTarget, importTargets, showToast } = useDealflow();
@@ -77,14 +77,14 @@ export const AddTargetModal: React.FC = () => {
   const handleBatchIngestUnicorns = () => {
     setIsGenerating(true);
     setTimeout(() => {
-      const unicorns = ['Wiz', 'Stripe', 'Ramp', 'Anthropic', 'Datadog', 'Supabase', 'Snyk', 'CrowdStrike', 'Plaid', 'Figma'];
-      const targetsList = unicorns.map((u) => generateCompanyWithAi(u));
+      const targetsList = generateGlobalMegaUniverse();
       importTargets(targetsList);
       setIsGenerating(false);
       setIsAddTargetOpen(false);
+      showToast('success', 'Global Universe Ingested', `Ingested ${targetsList.length} worldwide companies across all 7 sectors.`);
 
       try {
-        confetti({ particleCount: 120, spread: 100, origin: { y: 0.5 } });
+        confetti({ particleCount: 140, spread: 100, origin: { y: 0.5 } });
       } catch (e) {
         // ignore
       }
@@ -471,16 +471,16 @@ export const AddTargetModal: React.FC = () => {
                   {/* Quick Real-World Presets */}
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
                     <span style={{ fontSize: '0.7rem', color: 'var(--text-subtle)' }}>Quick Presets:</span>
-                    {['Wiz', 'Stripe', 'Ramp', 'Anthropic', 'Datadog', 'Figma', 'Supabase', 'CrowdStrike'].map((preset) => (
+                    {['OpenAI', 'Databricks', 'Palantir', 'Snowflake', 'Wiz', 'Stripe', 'Ramp', 'Anthropic', 'Figma', 'Canva', 'Razorpay', 'Mistral AI', 'Palo Alto', 'Datadog'].map((preset) => (
                       <button
                         key={preset}
                         type="button"
                         onClick={() => {
                           setAiCompanyName(preset);
-                          if (preset === 'Wiz' || preset === 'CrowdStrike') setAiSector('Cybersecurity');
-                          else if (preset === 'Stripe' || preset === 'Ramp') setAiSector('FinTech & Payments');
-                          else if (preset === 'Anthropic' || preset === 'Figma') setAiSector('Enterprise AI');
-                          else if (preset === 'Datadog' || preset === 'Supabase') setAiSector('DevOps & Cloud Infra');
+                          if (preset === 'Wiz' || preset === 'Palo Alto') setAiSector('Cybersecurity');
+                          else if (preset === 'Stripe' || preset === 'Ramp' || preset === 'Razorpay') setAiSector('FinTech & Payments');
+                          else if (preset === 'Anthropic' || preset === 'Figma' || preset === 'OpenAI' || preset === 'Databricks' || preset === 'Palantir' || preset === 'Canva' || preset === 'Mistral AI') setAiSector('Enterprise AI');
+                          else if (preset === 'Datadog' || preset === 'Snowflake') setAiSector('DevOps & Cloud Infra');
                         }}
                         style={{
                           background: 'rgba(255, 255, 255, 0.04)',
@@ -555,10 +555,10 @@ export const AddTargetModal: React.FC = () => {
                   onClick={handleBatchIngestUnicorns}
                   disabled={isGenerating}
                   className="btn btn-secondary btn-sm"
-                  title="Batch generate top 10 market leaders (Wiz, Stripe, Ramp, Anthropic, Datadog, etc.)"
+                  title="Batch generate 35+ market leaders across all sectors"
                 >
                   <Zap size={14} color="var(--accent-amber)" />
-                  <span>{isGenerating ? 'Synthesizing...' : '⚡ Batch Ingest Top 10 Tech Leaders'}</span>
+                  <span>{isGenerating ? 'Synthesizing...' : '⚡ Ingest 35+ Worldwide Giants (All Sectors)'}</span>
                 </button>
 
                 <button

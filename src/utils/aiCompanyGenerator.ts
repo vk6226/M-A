@@ -481,6 +481,486 @@ const REAL_WORLD_KNOWLEDGE_BASE: Record<string, Partial<TargetCompany>> = {
     },
     logoColor: '#a855f7',
     logoAccent: '#c084fc',
+  },
+  'openai': {
+    name: 'OpenAI, LLC',
+    codeName: 'Project Prometheus',
+    sector: 'Enterprise AI',
+    subSector: 'Frontier Foundation Models, GPT-4o & Autonomous Multi-Modal Agents',
+    headquarters: { city: 'San Francisco, CA', country: 'United States', region: 'North America' },
+    ownership: 'VC Series B/C',
+    dealReadiness: 'Approachable (Warm Intro)',
+    tagline: 'Global Leader in Frontier Generative Intelligence and Large Language Models',
+    executiveSummary: 'OpenAI is the pioneer of modern generative AI, serving over 200M+ weekly active users and 92% of Fortune 500 enterprises. Its flagship offerings include ChatGPT Enterprise, OpenAI API, and specialized reasoning models.',
+    investmentThesis: 'Transformational sovereign-tier asset. Anchor acquisition establishes insurmountable lead in core foundation models, enterprise agentic automation, and consumer AI distribution.',
+    keyCustomers: ['Microsoft', 'Apple', 'Morgan Stanley', 'Salesforce', 'PwC', 'BBVA'],
+    techStack: ['Python', 'Triton', 'PyTorch', 'CUDA', 'Azure Cloud', 'Kubernetes'],
+    patentsCount: 64,
+    financials: {
+      arr: 4100.0,
+      revenueLTM: 3700.0,
+      revenueGrowthYoY: 170.0,
+      grossMargin: 65.0,
+      ebitdaLTM: -1400.0,
+      ebitdaMargin: -37.8,
+      fcfLTM: -1100.0,
+      ruleOf40: 132.2,
+      netDollarRetention: 155.0,
+      cacPaybackMonths: 5.5,
+      ltvCac: 11.2,
+      customerCount: 1200000,
+      top3CustomerConcentration: 12.0,
+    },
+    valuation: {
+      evArrMultiple: 38.0,
+      evEbitdaMultiple: -1,
+      targetEnterpriseValue: 157000.0,
+      dcfImpliedEv: 150000.0,
+      precedentTransactionMultiple: 36.0,
+      suggestedOfferRange: { low: 145000.0, midpoint: 157000.0, high: 170000.0 },
+    },
+    strategicFit: {
+      overallScore: 99,
+      techStackSynergy: 98,
+      marketExpansion: 100,
+      culturalCompatibility: 91,
+      talentIPRetention: 99,
+      potentialSynergiesRunRateM: 4500.0,
+    },
+    logoColor: '#10a37f',
+    logoAccent: '#34d399',
+  },
+  'databricks': {
+    name: 'Databricks, Inc.',
+    codeName: 'Project Lakehouse',
+    sector: 'Enterprise AI',
+    subSector: 'Unified Data Intelligence & Apache Spark Lakehouse Architecture',
+    headquarters: { city: 'San Francisco, CA', country: 'United States', region: 'North America' },
+    ownership: 'VC Series B/C',
+    dealReadiness: 'Approachable (Warm Intro)',
+    tagline: 'The Data and AI Company Unifying Analytics, Governance and GenAI Models',
+    executiveSummary: 'Databricks pioneered the Lakehouse architecture, unifying data lakes and data warehouses for 10,000+ organizations worldwide. Powers DBRX, MosaicML generative AI training, and Delta Lake.',
+    investmentThesis: 'Strategic core of enterprise data estate. Unrivaled data ingestion, analytics, and enterprise generative model training pipeline.',
+    keyCustomers: ['AT&T', 'Shell', 'Rolls-Royce', 'Walgreens', 'Regeneron', 'Comcast'],
+    techStack: ['Scala', 'Python', 'Spark', 'Delta Lake', 'AWS', 'Azure', 'GCP'],
+    patentsCount: 52,
+    financials: {
+      arr: 2400.0,
+      revenueLTM: 2150.0,
+      revenueGrowthYoY: 60.0,
+      grossMargin: 82.0,
+      ebitdaLTM: 95.0,
+      ebitdaMargin: 4.4,
+      fcfLTM: 110.0,
+      ruleOf40: 64.4,
+      netDollarRetention: 140.0,
+      cacPaybackMonths: 8.4,
+      ltvCac: 8.9,
+      customerCount: 11500,
+      top3CustomerConcentration: 5.2,
+    },
+    valuation: {
+      evArrMultiple: 18.5,
+      evEbitdaMultiple: 460.0,
+      targetEnterpriseValue: 44400.0,
+      dcfImpliedEv: 43000.0,
+      precedentTransactionMultiple: 19.0,
+      suggestedOfferRange: { low: 41000.0, midpoint: 44400.0, high: 48000.0 },
+    },
+    strategicFit: {
+      overallScore: 98,
+      techStackSynergy: 97,
+      marketExpansion: 98,
+      culturalCompatibility: 95,
+      talentIPRetention: 97,
+      potentialSynergiesRunRateM: 1100.0,
+    },
+    logoColor: '#ff3621',
+    logoAccent: '#fb7185',
+  },
+  'palantir': {
+    name: 'Palantir Technologies Inc.',
+    codeName: 'Project Foundry',
+    sector: 'Enterprise AI',
+    subSector: 'Enterprise AI Platform (AIP) & Mission-Critical Defense Ontology',
+    headquarters: { city: 'Denver, CO', country: 'United States', region: 'North America' },
+    ownership: 'Public (Listed)',
+    dealReadiness: 'Approachable (Warm Intro)',
+    tagline: 'Operational AI Operating System for Government, Defense and Commercial Enterprises',
+    executiveSummary: 'Palantir provides Gotham, Foundry, Apollo, and AIP (Artificial Intelligence Platform). Its ontology architecture allows generative models to operate safely within regulated operational environments.',
+    investmentThesis: 'Monopolistic defense clearance moats combined with explosive commercial AIP adoption. High operating leverage with expanding GAAP margins.',
+    keyCustomers: ['U.S. Department of Defense', 'BP', 'Ferrari', 'NHS UK', 'Airbus', 'Cleveland Clinic'],
+    techStack: ['Java', 'TypeScript', 'C++', 'Kubernetes', 'AWS GovCloud', 'PostgreSQL'],
+    patentsCount: 88,
+    financials: {
+      arr: 2900.0,
+      revenueLTM: 2650.0,
+      revenueGrowthYoY: 30.0,
+      grossMargin: 82.0,
+      ebitdaLTM: 740.0,
+      ebitdaMargin: 27.9,
+      fcfLTM: 820.0,
+      ruleOf40: 57.9,
+      netDollarRetention: 118.0,
+      cacPaybackMonths: 9.8,
+      ltvCac: 7.8,
+      customerCount: 650,
+      top3CustomerConcentration: 14.5,
+    },
+    valuation: {
+      evArrMultiple: 29.0,
+      evEbitdaMultiple: 112.0,
+      targetEnterpriseValue: 84100.0,
+      dcfImpliedEv: 81000.0,
+      precedentTransactionMultiple: 28.0,
+      suggestedOfferRange: { low: 78000.0, midpoint: 84100.0, high: 90000.0 },
+    },
+    strategicFit: {
+      overallScore: 96,
+      techStackSynergy: 94,
+      marketExpansion: 97,
+      culturalCompatibility: 89,
+      talentIPRetention: 95,
+      potentialSynergiesRunRateM: 1450.0,
+    },
+    logoColor: '#10b981',
+    logoAccent: '#34d399',
+  },
+  'snowflake': {
+    name: 'Snowflake Inc.',
+    codeName: 'Project Glacier',
+    sector: 'DevOps & Cloud Infra',
+    subSector: 'Multi-Cloud Data Cloud & Native Data Sharing Network',
+    headquarters: { city: 'Bozeman, MT', country: 'United States', region: 'North America' },
+    ownership: 'Public (Listed)',
+    dealReadiness: 'Approachable (Warm Intro)',
+    tagline: 'Mobilizing the World’s Data with Safe Architecture and Cortex AI',
+    executiveSummary: 'Snowflake enables organizations to mobilize data across clouds with near-zero maintenance. Cortex AI integrates large language models directly into SQL workflows with unified governance.',
+    investmentThesis: 'Dominant enterprise analytical data warehouse standard. Superior cloud-agnostic position across AWS, Azure, and Google Cloud.',
+    keyCustomers: ['Capital One', 'Mastercard', 'DoorDash', 'Disney', 'Kraft Heinz'],
+    techStack: ['C++', 'Java', 'Python', 'FoundationDB', 'AWS S3', 'Kubernetes'],
+    patentsCount: 46,
+    financials: {
+      arr: 3600.0,
+      revenueLTM: 3300.0,
+      revenueGrowthYoY: 29.0,
+      grossMargin: 74.0,
+      ebitdaLTM: 560.0,
+      ebitdaMargin: 17.0,
+      fcfLTM: 780.0,
+      ruleOf40: 46.0,
+      netDollarRetention: 127.0,
+      cacPaybackMonths: 11.2,
+      ltvCac: 6.9,
+      customerCount: 10200,
+      top3CustomerConcentration: 4.8,
+    },
+    valuation: {
+      evArrMultiple: 14.5,
+      evEbitdaMultiple: 93.0,
+      targetEnterpriseValue: 52200.0,
+      dcfImpliedEv: 50500.0,
+      precedentTransactionMultiple: 15.0,
+      suggestedOfferRange: { low: 48000.0, midpoint: 52200.0, high: 56000.0 },
+    },
+    strategicFit: {
+      overallScore: 95,
+      techStackSynergy: 96,
+      marketExpansion: 96,
+      culturalCompatibility: 94,
+      talentIPRetention: 95,
+      potentialSynergiesRunRateM: 920.0,
+    },
+    logoColor: '#29b5e8',
+    logoAccent: '#67e8f9',
+  },
+  'notion': {
+    name: 'Notion Labs, Inc.',
+    codeName: 'Project CanvasWork',
+    sector: 'Enterprise AI',
+    subSector: 'Collaborative Enterprise Knowledge Base & Connected AI Workspace',
+    headquarters: { city: 'San Francisco, CA', country: 'United States', region: 'North America' },
+    ownership: 'VC Series B/C',
+    dealReadiness: 'Immediate (Active Process)',
+    tagline: 'The All-in-One Connected Workspace for Docs, Wikis, Projects and Enterprise AI',
+    executiveSummary: 'Notion blends everyday work apps into one. Millions of teams use Notion for project management, internal wikis, and document creation, accelerated by Notion AI and Q&A semantic search.',
+    investmentThesis: 'Supreme bottom-up virality with unprecedented cultural mindshare among developers, operators, and modern knowledge workers.',
+    keyCustomers: ['Toyota', 'Figma', 'Match Group', 'Monzo', 'Headspace', 'Vercel'],
+    techStack: ['TypeScript', 'React', 'Kotlin', 'PostgreSQL', 'AWS DynamoDB', 'Redis'],
+    patentsCount: 14,
+    financials: {
+      arr: 460.0,
+      revenueLTM: 410.0,
+      revenueGrowthYoY: 48.0,
+      grossMargin: 87.0,
+      ebitdaLTM: 65.0,
+      ebitdaMargin: 15.8,
+      fcfLTM: 72.0,
+      ruleOf40: 63.8,
+      netDollarRetention: 138.0,
+      cacPaybackMonths: 6.2,
+      ltvCac: 10.4,
+      customerCount: 450000,
+      top3CustomerConcentration: 3.2,
+    },
+    valuation: {
+      evArrMultiple: 22.0,
+      evEbitdaMultiple: 155.0,
+      targetEnterpriseValue: 10120.0,
+      dcfImpliedEv: 9800.0,
+      precedentTransactionMultiple: 22.5,
+      suggestedOfferRange: { low: 9200.0, midpoint: 10120.0, high: 11200.0 },
+    },
+    strategicFit: {
+      overallScore: 97,
+      techStackSynergy: 95,
+      marketExpansion: 99,
+      culturalCompatibility: 96,
+      talentIPRetention: 98,
+      potentialSynergiesRunRateM: 320.0,
+    },
+    logoColor: '#ffffff',
+    logoAccent: '#d1d5db',
+  },
+  'canva': {
+    name: 'Canva Pty Ltd',
+    codeName: 'Project Palette',
+    sector: 'Enterprise AI',
+    subSector: 'Enterprise Visual Suite & Generative Design Studio (Magic Studio)',
+    headquarters: { city: 'Sydney', country: 'Australia', region: 'APAC' },
+    ownership: 'VC Series B/C',
+    dealReadiness: 'Approachable (Warm Intro)',
+    tagline: 'Empowering the Entire World to Design with Intuitive Generative AI',
+    executiveSummary: 'Canva serves over 190M monthly active users globally across 190 countries. Its visual suite brings professional presentations, video editing, and enterprise brand kits to non-designers.',
+    investmentThesis: 'Generates extraordinary cash flow with 90%+ consumer-to-enterprise conversion. Massive global brand affinity in APAC, EMEA, and Americas.',
+    keyCustomers: ['FedEx', 'Sony Music', 'Zoom', 'Salesforce', 'PayPal', 'Gucci'],
+    techStack: ['Java', 'TypeScript', 'WebGL', 'AWS S3', 'Terraform', 'Kafka'],
+    patentsCount: 38,
+    financials: {
+      arr: 2350.0,
+      revenueLTM: 2100.0,
+      revenueGrowthYoY: 36.0,
+      grossMargin: 84.0,
+      ebitdaLTM: 430.0,
+      ebitdaMargin: 20.5,
+      fcfLTM: 480.0,
+      ruleOf40: 56.5,
+      netDollarRetention: 125.0,
+      cacPaybackMonths: 7.1,
+      ltvCac: 9.1,
+      customerCount: 190000000,
+      top3CustomerConcentration: 2.1,
+    },
+    valuation: {
+      evArrMultiple: 11.5,
+      evEbitdaMultiple: 62.0,
+      targetEnterpriseValue: 27000.0,
+      dcfImpliedEv: 26200.0,
+      precedentTransactionMultiple: 12.0,
+      suggestedOfferRange: { low: 25000.0, midpoint: 27000.0, high: 29500.0 },
+    },
+    strategicFit: {
+      overallScore: 96,
+      techStackSynergy: 93,
+      marketExpansion: 99,
+      culturalCompatibility: 94,
+      talentIPRetention: 95,
+      potentialSynergiesRunRateM: 740.0,
+    },
+    logoColor: '#00c4cc',
+    logoAccent: '#5eead4',
+  },
+  'razorpay': {
+    name: 'Razorpay Software Pvt. Ltd.',
+    codeName: 'Project Deccan',
+    sector: 'FinTech & Payments',
+    subSector: 'Indian Full-Stack Payment Gateway, UPI Switch & Neobanking Suite',
+    headquarters: { city: 'Bengaluru', country: 'India', region: 'APAC' },
+    ownership: 'VC Series B/C',
+    dealReadiness: 'Immediate (Active Process)',
+    tagline: 'Powering Digital Commerce & Real-Time Payments for 10M+ Indian Merchants',
+    executiveSummary: 'Razorpay is India’s premier financial ecosystem for online businesses. Processes billions in monthly TPV across UPI, cards, net banking, and automated corporate payroll (RazorpayX).',
+    investmentThesis: 'Irreplaceable payment superhighway in the world’s fastest-growing digital economy. Invaluable UPI infrastructure and corporate banking relationships.',
+    keyCustomers: ['Swiggy', 'Zomato', 'Airtel', 'BookMyShow', 'Facebook India', 'Ola'],
+    techStack: ['Go', 'PHP', 'Node.js', 'AWS Mumbai', 'Kafka', 'MySQL'],
+    patentsCount: 16,
+    financials: {
+      arr: 340.0,
+      revenueLTM: 295.0,
+      revenueGrowthYoY: 42.0,
+      grossMargin: 68.0,
+      ebitdaLTM: 28.0,
+      ebitdaMargin: 9.5,
+      fcfLTM: 32.0,
+      ruleOf40: 51.5,
+      netDollarRetention: 130.0,
+      cacPaybackMonths: 8.0,
+      ltvCac: 7.6,
+      customerCount: 10000000,
+      top3CustomerConcentration: 7.8,
+    },
+    valuation: {
+      evArrMultiple: 22.0,
+      evEbitdaMultiple: 267.0,
+      targetEnterpriseValue: 7480.0,
+      dcfImpliedEv: 7100.0,
+      precedentTransactionMultiple: 21.0,
+      suggestedOfferRange: { low: 6800.0, midpoint: 7480.0, high: 8200.0 },
+    },
+    strategicFit: {
+      overallScore: 95,
+      techStackSynergy: 92,
+      marketExpansion: 99,
+      culturalCompatibility: 93,
+      talentIPRetention: 94,
+      potentialSynergiesRunRateM: 220.0,
+    },
+    logoColor: '#2b84ea',
+    logoAccent: '#60a5fa',
+  },
+  'mistral': {
+    name: 'Mistral AI SAS',
+    codeName: 'Project Mistral',
+    sector: 'Enterprise AI',
+    subSector: 'European Frontier Open-Weight AI Models & Custom Compute Ingestion',
+    headquarters: { city: 'Paris', country: 'France', region: 'EMEA' },
+    ownership: 'VC Series B/C',
+    dealReadiness: 'Approachable (Warm Intro)',
+    tagline: 'Frontier AI in Your Hands: Efficient, Open-Source & Enterprise-Grade Intelligence',
+    executiveSummary: 'Mistral AI is Europe’s champion in large language models. Creators of Mistral 7B, Mixtral 8x22B, and Mistral Large, favored by European sovereigns and privacy-conscious multinationals.',
+    investmentThesis: 'Sovereign EU AI compliance asset with cutting-edge parameter efficiency and sparse Mixture-of-Experts (MoE) IP moat.',
+    keyCustomers: ['BNP Paribas', 'Cisco', 'Orange', 'Brave', 'Snowflake', 'SAP'],
+    techStack: ['Python', 'C++', 'PyTorch', 'FlashAttention', 'CUDA', 'Scaleway/AWS'],
+    patentsCount: 12,
+    financials: {
+      arr: 190.0,
+      revenueLTM: 120.0,
+      revenueGrowthYoY: 240.0,
+      grossMargin: 74.0,
+      ebitdaLTM: -60.0,
+      ebitdaMargin: -50.0,
+      fcfLTM: -45.0,
+      ruleOf40: 190.0,
+      netDollarRetention: 160.0,
+      cacPaybackMonths: 4.8,
+      ltvCac: 12.0,
+      customerCount: 8400,
+      top3CustomerConcentration: 16.0,
+    },
+    valuation: {
+      evArrMultiple: 32.0,
+      evEbitdaMultiple: -1,
+      targetEnterpriseValue: 6080.0,
+      dcfImpliedEv: 5700.0,
+      precedentTransactionMultiple: 30.0,
+      suggestedOfferRange: { low: 5500.0, midpoint: 6080.0, high: 6800.0 },
+    },
+    strategicFit: {
+      overallScore: 98,
+      techStackSynergy: 99,
+      marketExpansion: 97,
+      culturalCompatibility: 91,
+      talentIPRetention: 98,
+      potentialSynergiesRunRateM: 410.0,
+    },
+    logoColor: '#f97316',
+    logoAccent: '#fb923c',
+  },
+  'paloalto': {
+    name: 'Palo Alto Networks, Inc.',
+    codeName: 'Project Strata',
+    sector: 'Cybersecurity',
+    subSector: 'Enterprise SASE, Prisma Cloud & AI-Driven Security Operations (Cortex)',
+    headquarters: { city: 'Santa Clara, CA', country: 'United States', region: 'North America' },
+    ownership: 'Public (Listed)',
+    dealReadiness: 'Approachable (Warm Intro)',
+    tagline: 'Global Cybersecurity Leader Pioneering Zero Trust and AI SecOps Platformization',
+    executiveSummary: 'Palo Alto Networks is the highest-capitalization security vendor worldwide. Its platform consolidation strategy brings Strata network security, Prisma cloud security, and Cortex XSIAM together.',
+    investmentThesis: 'Undisputed enterprise security bedrock. Unmatched enterprise wallet capture and expanding operating free cash flows.',
+    keyCustomers: ['JPMorgan Chase', 'Schlumberger', 'Siemens', 'Delta Air Lines', 'FedEx'],
+    techStack: ['C++', 'Python', 'Go', 'AWS/GCP', 'Linux Kernel', 'FPGA'],
+    patentsCount: 540,
+    financials: {
+      arr: 8200.0,
+      revenueLTM: 7800.0,
+      revenueGrowthYoY: 19.0,
+      grossMargin: 74.0,
+      ebitdaLTM: 2100.0,
+      ebitdaMargin: 26.9,
+      fcfLTM: 2800.0,
+      ruleOf40: 45.9,
+      netDollarRetention: 120.0,
+      cacPaybackMonths: 12.0,
+      ltvCac: 6.2,
+      customerCount: 85000,
+      top3CustomerConcentration: 2.8,
+    },
+    valuation: {
+      evArrMultiple: 13.5,
+      evEbitdaMultiple: 52.0,
+      targetEnterpriseValue: 110700.0,
+      dcfImpliedEv: 108000.0,
+      precedentTransactionMultiple: 14.0,
+      suggestedOfferRange: { low: 104000.0, midpoint: 110700.0, high: 118000.0 },
+    },
+    strategicFit: {
+      overallScore: 94,
+      techStackSynergy: 92,
+      marketExpansion: 96,
+      culturalCompatibility: 91,
+      talentIPRetention: 93,
+      potentialSynergiesRunRateM: 1900.0,
+    },
+    logoColor: '#f59e0b',
+    logoAccent: '#fbbf24',
+  },
+  'tempus': {
+    name: 'Tempus AI, Inc.',
+    codeName: 'Project Genome',
+    sector: 'HealthTech & Bio',
+    subSector: 'Clinical Genomic Sequencing & Precision Oncology Multimodal AI',
+    headquarters: { city: 'Chicago, IL', country: 'United States', region: 'North America' },
+    ownership: 'Public (Listed)',
+    dealReadiness: 'Approachable (Warm Intro)',
+    tagline: 'Practical Application of AI and Machine Learning to Precision Medicine',
+    executiveSummary: 'Tempus connects molecular genomic data with clinical outcomes across more than 40% of all cancer patients in the United States, providing biopharma partners with unparalleled real-world data.',
+    investmentThesis: 'Defensible real-world oncology clinical data repository that cannot be replicated. Rapidly expanding high-margin biopharma data license revenue.',
+    keyCustomers: ['Pfizer', 'AstraZeneca', 'Novartis', 'Mayo Clinic', 'MD Anderson'],
+    techStack: ['Python', 'Nextflow', 'PyTorch', 'AWS BioCloud', 'Snowflake'],
+    patentsCount: 31,
+    financials: {
+      arr: 680.0,
+      revenueLTM: 620.0,
+      revenueGrowthYoY: 28.0,
+      grossMargin: 64.0,
+      ebitdaLTM: -45.0,
+      ebitdaMargin: -7.2,
+      fcfLTM: -30.0,
+      ruleOf40: 20.8,
+      netDollarRetention: 122.0,
+      cacPaybackMonths: 14.0,
+      ltvCac: 5.5,
+      customerCount: 220,
+      top3CustomerConcentration: 18.0,
+    },
+    valuation: {
+      evArrMultiple: 9.5,
+      evEbitdaMultiple: -1,
+      targetEnterpriseValue: 6460.0,
+      dcfImpliedEv: 6100.0,
+      precedentTransactionMultiple: 10.0,
+      suggestedOfferRange: { low: 5900.0, midpoint: 6460.0, high: 7100.0 },
+    },
+    strategicFit: {
+      overallScore: 93,
+      techStackSynergy: 90,
+      marketExpansion: 95,
+      culturalCompatibility: 92,
+      talentIPRetention: 95,
+      potentialSynergiesRunRateM: 280.0,
+    },
+    logoColor: '#06b6d4',
+    logoAccent: '#22d3ee',
   }
 };
 
@@ -705,3 +1185,78 @@ function hashString(str: any): number {
   }
   return hash;
 }
+
+/**
+ * AI Natural Language Universe Generator
+ * Parses any user prompt (e.g. "Find all AI security companies" or "Top European scale-ups")
+ * and synthesizes 5 to 10 matching institutional targets.
+ */
+export function generateBatchFromPrompt(prompt: string): TargetCompany[] {
+  const p = prompt.toLowerCase();
+
+  let targetNames: string[] = [];
+  let sectorFallback: Sector = 'Enterprise AI';
+
+  if (p.includes('cyber') || p.includes('secur') || p.includes('defense') || p.includes('shield')) {
+    targetNames = ['Wiz', 'CrowdStrike', 'Palo Alto Networks', 'SentinelOne', 'Snyk', 'Zscaler', 'Cloudflare', 'Okta'];
+    sectorFallback = 'Cybersecurity';
+  } else if (p.includes('fintech') || p.includes('pay') || p.includes('bank') || p.includes('crypto')) {
+    targetNames = ['Stripe', 'Ramp', 'Plaid', 'Razorpay', 'Adyen', 'Brex', 'Klarna', 'Robinhood'];
+    sectorFallback = 'FinTech & Payments';
+  } else if (p.includes('india') || p.includes('bengaluru') || p.includes('upi')) {
+    targetNames = ['Razorpay', 'Postman', 'Cred', 'Pine Labs', 'Zerodha', 'Swiggy', 'Freshworks'];
+    sectorFallback = 'FinTech & Payments';
+  } else if (p.includes('europe') || p.includes('emea') || p.includes('paris') || p.includes('london')) {
+    targetNames = ['Mistral AI', 'Spotify', 'Adyen', 'Klarna', 'Celonis', 'Supercell', 'DeepL'];
+    sectorFallback = 'Enterprise AI';
+  } else if (p.includes('health') || p.includes('bio') || p.includes('med') || p.includes('clinical') || p.includes('pharma')) {
+    targetNames = ['Tempus AI', 'Epic Systems', 'Flatiron Health', 'Veeva Systems', 'Butterfly Network', 'PathAI'];
+    sectorFallback = 'HealthTech & Bio';
+  } else if (p.includes('clean') || p.includes('energy') || p.includes('green') || p.includes('solar') || p.includes('battery')) {
+    targetNames = ['Tesla Energy', 'Northvolt', 'Form Energy', 'Rivian Fleet', 'Redwood Materials'];
+    sectorFallback = 'CleanTech & Energy';
+  } else if (p.includes('cloud') || p.includes('devops') || p.includes('infra') || p.includes('data')) {
+    targetNames = ['Datadog', 'Supabase', 'Snowflake', 'MongoDB', 'GitLab', 'Vercel', 'Docker'];
+    sectorFallback = 'DevOps & Cloud Infra';
+  } else if (p.includes('ai') || p.includes('llm') || p.includes('agent') || p.includes('gpt') || p.includes('intelligence')) {
+    targetNames = ['OpenAI', 'Anthropic', 'Databricks', 'Palantir', 'Mistral AI', 'Scale AI', 'Perplexity', 'Hugging Face'];
+    sectorFallback = 'Enterprise AI';
+  } else {
+    // Arbitrary custom prompt - synthesize 6 thematic companies derived from the query words!
+    const cleanWord = prompt.replace(/[^a-zA-Z ]/g, '').trim().split(' ')[0] || 'Alpha';
+    const capitalized = cleanWord.charAt(0).toUpperCase() + cleanWord.slice(1);
+    targetNames = [
+      `${capitalized} Cognitive Networks`,
+      `Hyper${capitalized} Systems`,
+      `Apex ${capitalized} Tech`,
+      `${capitalized} Quantum Matrix`,
+      `Nova ${capitalized} Labs`,
+      `${capitalized} Intelligence Cloud`
+    ];
+  }
+
+  return targetNames.map((name) => generateCompanyWithAi(name, sectorFallback));
+}
+
+/**
+ * Generates an extensive Global Mega-Universe of 40+ institutional companies across all sectors
+ */
+export function generateGlobalMegaUniverse(): TargetCompany[] {
+  const globalPioneers = [
+    // Enterprise AI
+    'OpenAI', 'Anthropic', 'Databricks', 'Palantir', 'Mistral AI', 'Scale AI', 'Figma', 'Notion', 'Canva',
+    // Cybersecurity
+    'Wiz', 'CrowdStrike', 'Palo Alto Networks', 'SentinelOne', 'Snyk', 'Cloudflare',
+    // FinTech & Payments
+    'Stripe', 'Ramp', 'Plaid', 'Razorpay', 'Adyen', 'Brex', 'Klarna',
+    // DevOps & Cloud Infra
+    'Datadog', 'Supabase', 'Snowflake', 'MongoDB', 'Vercel', 'GitLab',
+    // HealthTech & Bio
+    'Tempus AI', 'Flatiron Health', 'Veeva Systems', 'Butterfly Network',
+    // CleanTech & Energy
+    'Tesla Energy', 'Form Energy', 'Northvolt', 'Redwood Materials'
+  ];
+
+  return globalPioneers.map((name) => generateCompanyWithAi(name));
+}
+
